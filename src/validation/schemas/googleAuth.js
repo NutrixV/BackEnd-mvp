@@ -5,4 +5,13 @@ const googleAuthValidationSchema = {
   }
 }
 
+/*
+ token: {
+credential: 'string',
+clientId: 'string',
+client_id: 'string',
+select_by: 'string'
+}
+*/
+
 module.exports = googleAuthValidationSchema
