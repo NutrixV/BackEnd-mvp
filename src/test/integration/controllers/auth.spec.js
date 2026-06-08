@@ -7,12 +7,17 @@ const errors = require('~/consts/errors')
 const tokenService = require('~/services/token')
 const Token = require('~/models/token')
 const { expectError } = require('~/test/helpers')
+const googleService = require('~/services/google')
+const { createError } = require('~/utils/errorsHelper')
 
+jest.mock('~/services/google', () => ({
+  validateGoogleToken: jest.fn()
+}))
 describe('Auth controller', () => {
   let app, server, signupResponse
 
   beforeAll(async () => {
-    ; ({ app, server } = await serverInit())
+    ;({ app, server } = await serverInit())
   })
 
   beforeEach(async () => {
@@ -112,6 +117,53 @@ describe('Auth controller', () => {
       const response = await app.patch('/auth/reset-password/invalid-token').send({ password: 'valid_pass1' })
 
       expectError(400, errors.BAD_RESET_TOKEN, response)
+    })
+  })
+
+  describe('GoogleAuth endpoint ', () => {
+    afterEach(() => {
+      jest.clearAllMocks()
+    })
+
+    it('should signup and login user with valid Google token', async () => {
+      const googleUserEmail = 'google-user@gmail.com'
+
+      googleService.validateGoogleToken.mockResolvedValue({
+        email: googleUserEmail,
+        given_name: user.firstName,
+        family_name: user.lastName
+      })
+
+      const response = await app.post('/auth/google-auth').send({
+        token: {
+          credential: 'valid-google-token'
+        }
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toHaveProperty('accessToken')
+      expect(response.headers['set-cookie']).toBeDefined()
+      expect(googleService.validateGoogleToken).toHaveBeenCalledWith('valid-google-token')
+    })
+
+    it('should throw INVALID_GOOGLE_TOKEN error if Google token is invalid ', async () => {
+      googleService.validateGoogleToken.mockRejectedValue(createError(401, errors.INVALID_GOOGLE_TOKEN))
+
+      const response = await app.post('/auth/google-auth').send({
+        token: {
+          credential: 'invalid-google-token'
+        }
+      })
+
+      expectError(401, errors.INVALID_GOOGLE_TOKEN, response)
+      expect(googleService.validateGoogleToken).toHaveBeenCalledWith('invalid-google-token')
+    })
+
+    it('should throw validation error if token is missing', async () => {
+      const response = await app.post('/auth/google-auth').send({})
+
+      expectError(422, errors.FIELD_IS_NOT_DEFINED('token'), response)
+      expect(googleService.validateGoogleToken).not.toHaveBeenCalled()
     })
   })
 })
