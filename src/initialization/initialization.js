@@ -3,7 +3,7 @@ const cors = require('cors')
 const cookieParser = require('cookie-parser')
 
 const {
-  config: { CLIENT_URL, SERVER_URL }
+  config: { CLIENT_URL }
 } = require('~/configs/config')
 const router = require('~/routes')
 const { createNotFoundError } = require('~/utils/errorsHelper')
@@ -16,7 +16,7 @@ const initialization = (app) => {
   app.use(cookieParser())
   app.use(
     cors({
-      origin: process.env.NODE_ENV === 'development' ? true : [CLIENT_URL, SERVER_URL].filter(Boolean),
+      origin: process.env.NODE_ENV === 'development' ? true : CLIENT_URL,
       credentials: true,
       methods: 'GET, POST, PATCH, DELETE',
       allowedHeaders: 'Content-Type, Authorization'
