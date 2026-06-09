@@ -188,5 +188,12 @@ describe('Auth controller', () => {
       expectError(422, errors.FIELD_IS_NOT_DEFINED('token'), response)
       expect(googleService.validateGoogleToken).not.toHaveBeenCalled()
     })
+
+    it('should throw validation error if credential is missing', async () => {
+      const response = await app.post('/auth/google-auth').send({ token: {} })
+
+      expectError(422, errors.FIELD_IS_NOT_DEFINED('credential'), response)
+      expect(googleService.validateGoogleToken).not.toHaveBeenCalled()
+    })
   })
 })

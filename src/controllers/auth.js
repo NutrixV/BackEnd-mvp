@@ -1,4 +1,6 @@
 const authService = require('~/services/auth')
+const { FIELD_IS_NOT_DEFINED } = require('~/consts/errors')
+const { createError } = require('~/utils/errorsHelper')
 const { oneDayInMs } = require('~/consts/auth')
 const {
   config: { COOKIE_DOMAIN }
@@ -87,9 +89,11 @@ const updatePassword = async (req, res) => {
 }
 
 const googleAuth = async (req, res) => {
-  const {
-    token: { credential }
-  } = req.body
+  const credential = req.body?.token?.credential
+
+  if (!credential) {
+    throw createError(422, FIELD_IS_NOT_DEFINED('credential'))
+  }
 
   const tokens = await authService.googleLogin(credential)
 
