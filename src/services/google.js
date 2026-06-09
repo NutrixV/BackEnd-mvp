@@ -16,8 +16,9 @@ const googleService = {
       })
 
       return ticket.getPayload()
-    } catch (err) {
+    } catch (_err) {
       throw createError(401, INVALID_GOOGLE_TOKEN)
+    }
     }
   }
 }
