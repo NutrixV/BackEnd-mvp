@@ -1,0 +1,113 @@
+# @see src/routes/resourcesCategory.js
+tags:
+  - name: ResourcesCategories
+    description: Resources category management (requires tutor role)
+
+paths:
+  /resources-categories:
+    get:
+      summary: Get all resource categories
+      tags: [ResourcesCategories]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of resource categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ResourcesCategory'
+    post:
+      summary: Create a resource category
+      tags: [ResourcesCategories]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+      responses:
+        '201':
+          description: Category created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourcesCategory'
+
+  /resources-categories/names:
+    get:
+      summary: Get names of all resource categories
+      tags: [ResourcesCategories]
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: List of category names
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+
+  /resources-categories/{id}:
+    patch:
+      summary: Update resource category by ID
+      tags: [ResourcesCategories]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: Updated category
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResourcesCategory'
+        '404':
+          description: Category not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete resource category by ID
+      tags: [ResourcesCategories]
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Category deleted
+        '404':
+          description: Category not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
