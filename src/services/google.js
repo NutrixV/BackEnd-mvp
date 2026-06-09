@@ -19,7 +19,6 @@ const googleService = {
     } catch (_err) {
       throw createError(401, INVALID_GOOGLE_TOKEN)
     }
-    }
   }
 }
 
