@@ -6,6 +6,7 @@ const {
 const errors = require('~/consts/errors')
 const tokenService = require('~/services/token')
 const Token = require('~/models/token')
+const User = require('~/models/user')
 const { expectError } = require('~/test/helpers')
 const googleService = require('~/services/google')
 const { createError } = require('~/utils/errorsHelper')
@@ -143,6 +144,28 @@ describe('Auth controller', () => {
       expect(response.statusCode).toBe(200)
       expect(response.body).toHaveProperty('accessToken')
       expect(response.headers['set-cookie']).toBeDefined()
+      expect(googleService.validateGoogleToken).toHaveBeenCalledWith('valid-google-token')
+    })
+
+    it('should login existing unconfirmed user and confirm email with valid Google token', async () => {
+      googleService.validateGoogleToken.mockResolvedValue({
+        email: user.email,
+        given_name: user.firstName,
+        family_name: user.lastName
+      })
+
+      const response = await app.post('/auth/google-auth').send({
+        token: {
+          credential: 'valid-google-token'
+        }
+      })
+
+      const updatedUser = await User.findOne({ email: user.email }).select('+isEmailConfirmed').lean().exec()
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toHaveProperty('accessToken')
+      expect(response.headers['set-cookie']).toBeDefined()
+      expect(updatedUser.isEmailConfirmed).toBe(true)
       expect(googleService.validateGoogleToken).toHaveBeenCalledWith('valid-google-token')
     })
 

@@ -121,7 +121,17 @@ const authService = {
 
     if (!user) {
       const randomPassword = crypto.randomBytes(16).toString('hex')
-      user = await createUser('student', firstName || 'User', lastName || '', email, randomPassword, 'en', true)
+      user = await createUser(
+        'student',
+        firstName || 'FirstName',
+        lastName || 'LastName',
+        email,
+        randomPassword,
+        'en',
+        true
+      )
+    } else if (!user.isEmailConfirmed) {
+      await privateUpdateUser(user._id, { isEmailConfirmed: true })
     }
 
     return authService.login(email, null, true)
