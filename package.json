@@ -12,6 +12,10 @@
   },
   "author": "SoftServe ITA",
   "license": "ISC",
+  "engines": {
+    "node": "22.x",
+    "npm": ">=10"
+  },
   "devDependencies": {
     "eslint": "^8.4.1",
     "eslint-config-prettier": "^8.3.0",

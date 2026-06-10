@@ -3,7 +3,7 @@ const emailService = require('~/services/email')
 const emailSubject = require('~/consts/emailSubject')
 const { checkLastLogin } = require('~/cron-jobs/checkForLastLogin')
 
-const mockedLastLoginDateToSendEmail = new Date(2023, 1, 32, 0, 0, 0, 0)
+const mockedLastLoginDateToSendEmail = new Date(2023, 2, 4, 0, 0, 0, 0)
 const mockedLastLoginDateToDeleteUser = new Date(2023, 1, 1, 0, 0, 0, 0)
 
 const mockedUser = {
@@ -26,8 +26,8 @@ describe('checkForLastUserLogin cron-job', () => {
   beforeEach(() => {
     mockedUsersList = { items: [{ ...mockedUser, lastLogin: mockedLastLoginDateToSendEmail }] }
     userService.getUsers = jest.fn(() => mockedUsersList)
-    const mockedCurrentDate = new Date(2023, 7, 23, 25, 0, 0, 0)
-    jest.useFakeTimers('modern').setSystemTime(mockedCurrentDate)
+    const mockedCurrentDate = new Date(2023, 7, 24, 1, 0, 0, 0)
+    jest.useFakeTimers({ doNotFake: ['performance'] }).setSystemTime(mockedCurrentDate)
   })
 
   afterEach(() => {
@@ -60,7 +60,7 @@ describe('checkForLastUserLogin cron-job', () => {
   })
 
   it('should return array of undefined if user lastLogin date is less than days to send email', async () => {
-    const optimalDate = new Date(2023, 5, 23, 25, 0, 0, 0)
+    const optimalDate = new Date(2023, 5, 24, 1, 0, 0, 0)
     mockedUsersList = { items: [{ ...mockedUser, lastLogin: optimalDate }] }
     userService.getUsers.mockImplementation(() => mockedUsersList)
 
