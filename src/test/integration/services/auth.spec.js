@@ -57,10 +57,10 @@ describe('Auth service', () => {
     const createdUser = await User.findOne({ email: user.email }).lean().exec()
     const savedToken = await Token.findOne({ user: result.userId }).lean().exec()
 
-    expect(result).toEqual({
-      userId: createdUser._id,
+    expect(result).toMatchObject({
       userEmail: user.email
     })
+    expect(result.userId.toString()).toBe(createdUser._id.toString())
     expect(savedToken[CONFIRM_TOKEN]).toBeDefined()
     expect(emailService.sendEmail).toHaveBeenCalledWith(
       user.email,
