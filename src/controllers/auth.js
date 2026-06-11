@@ -91,8 +91,6 @@ const updatePassword = async (req, res) => {
 const googleAuth = async (req, res) => {
   const credential = req.body?.token?.credential
 
-  // TODO: Move nested field validation to validation middleware when it supports nested schemas.
-
   if (!credential) {
     throw createError(422, FIELD_IS_NOT_DEFINED('credential'))
   }

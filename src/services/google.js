@@ -4,6 +4,7 @@ const {
 } = require('~/configs/config')
 const { createError } = require('~/utils/errorsHelper')
 const { INVALID_GOOGLE_TOKEN } = require('~/consts/errors')
+const logger = require('~/logger/logger')
 
 const client = new OAuth2Client(clientId)
 
@@ -16,7 +17,8 @@ const googleService = {
       })
 
       return ticket.getPayload()
-    } catch (_err) {
+    } catch (err) {
+      logger.error(err)
       throw createError(401, INVALID_GOOGLE_TOKEN)
     }
   }

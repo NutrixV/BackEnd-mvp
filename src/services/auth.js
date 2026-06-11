@@ -1,4 +1,4 @@
-const crypto = require('crypto')
+const crypto = require('node:crypto')
 const tokenService = require('~/services/token')
 const emailService = require('~/services/email')
 const googleService = require('~/services/google')
@@ -121,7 +121,7 @@ const authService = {
 
     if (!user) {
       const randomPassword = crypto.randomBytes(16).toString('hex')
-      user = await createUser(
+      await createUser(
         'student',
         firstName || 'FirstName',
         lastName || 'LastName',
