@@ -28,6 +28,7 @@ components:
           type: string
         nativeLanguage:
           type: string
+          nullable: true
           enum: [English, Ukrainian, Polish, German, French, Spanish, Arabic]
         lastLogin:
           type: string
@@ -60,10 +61,9 @@ components:
 
     AuthTokens:
       type: object
+      description: refreshToken is sent as HttpOnly cookie, not in response body
       properties:
         accessToken:
-          type: string
-        refreshToken:
           type: string
 
     Offer:
