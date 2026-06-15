@@ -192,7 +192,7 @@ describe('Auth controller', () => {
     it('should throw validation error if credential is missing', async () => {
       const response = await app.post('/auth/google-auth').send({ token: {} })
 
-      expectError(422, errors.FIELD_IS_NOT_DEFINED('credential'), response)
+      expectError(422, errors.FIELD_IS_NOT_DEFINED('token.credential'), response)
       expect(googleService.validateGoogleToken).not.toHaveBeenCalled()
     })
   })

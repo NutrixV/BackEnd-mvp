@@ -1,17 +1,14 @@
 const googleAuthValidationSchema = {
   token: {
     type: 'object',
-    required: true
+    required: true,
+    properties: {
+      credential: {
+        type: 'string',
+        required: true
+      }
+    }
   }
 }
-
-/*
- token: {
-credential: 'string',
-clientId: 'string',
-client_id: 'string',
-select_by: 'string'
-}
-*/
 
 module.exports = googleAuthValidationSchema
